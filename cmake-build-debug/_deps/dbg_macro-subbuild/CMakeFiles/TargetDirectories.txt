@@ -1,0 +1,3 @@
+/home/brian/Projects/connection-pool/cmake-build-debug/_deps/dbg_macro-subbuild/CMakeFiles/dbg_macro-populate.dir
+/home/brian/Projects/connection-pool/cmake-build-debug/_deps/dbg_macro-subbuild/CMakeFiles/edit_cache.dir
+/home/brian/Projects/connection-pool/cmake-build-debug/_deps/dbg_macro-subbuild/CMakeFiles/rebuild_cache.dir

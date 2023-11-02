@@ -8,6 +8,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <functional>
+#include <any>
 
 namespace xhl {
 	struct conn_config {
@@ -35,6 +37,26 @@ namespace xhl {
 		int32_t partition{0};
 		int32_t max_idle{60};
 		int32_t timeout_sec{20};
+		std::any callback;
+
+
+		template <typename Signature>
+		void setFunction(std::function<Signature> func) {
+			callback = std::make_any<std::function<Signature>>(func);
+		}
+
+		template <typename... Args>
+		auto call(Args... args) {
+			if (callback.has_value()) {
+				try {
+					return std::any_cast<std::function<decltype(args)...>>(callback)(args...);
+				} catch (const std::bad_any_cast& e) {
+					std::cerr << "Error: " << e.what() << std::endl;
+				}
+			}
+			// Return a default value or handle the case when no function is set.
+			return std::declval<Args...>();
+		}
 
 		operator std::string() const {
 			return

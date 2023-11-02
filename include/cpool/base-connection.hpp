@@ -6,16 +6,16 @@
 #define CONNECTION_POOL_BASE_CONNECTION_HPP
 
 #include <ctime>
-#include "conf/config.hpp"
+#include "cpool/conf/config.hpp"
 
 namespace xhl {
 
-	class base_connection {
+	class base {
 	private:
 		clock_t _aliveTime{};
 	public:
 
-		base_connection(xhl::conn_config& conf);
+		base(xhl::conn_config& conf);
 
 		// 刷新连接的起始空闲时刻
 		void refreshAliveTime();

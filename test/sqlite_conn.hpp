@@ -10,10 +10,10 @@
 #include <sqlite3.h>
 #include "dbg.h"
 #include "student.hpp"
-#include "base_connection.hpp"
+#include "cpool/base-connection.hpp"
 
 namespace xhl {
-	class sqlite_connection : public xhl::base_connection {
+	class sqlite_connection : public xhl::base {
 	private:
 		std::string db_path{"./temp.db"};
 		std::string table_name{"test"};
@@ -79,7 +79,7 @@ namespace xhl {
 		}
 
 	public:
-		sqlite_connection(xhl::conn_config& conf) : base_connection(conf) { // NOLINT(*-explicit-constructor)
+		sqlite_connection(xhl::conn_config& conf) : base(conf) { // NOLINT(*-explicit-constructor)
 			this->db_path = conf.url;
 			this->table_name = conf.tb;
 

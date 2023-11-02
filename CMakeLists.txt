@@ -7,7 +7,6 @@ set(TARGET connection-pool)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 aux_source_directory(${PROJECT_SOURCE_DIR}/source SOURCE_FILE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/include SOURCE_FILE)
-aux_source_directory(${PROJECT_SOURCE_DIR}/include/conf SOURCE_FILE)
 
 add_library(${TARGET} SHARED ${SOURCE_FILE})
 

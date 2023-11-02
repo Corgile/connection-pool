@@ -21,11 +21,11 @@
 
 namespace xhl {
 	template<class Connection,
-			typename = std::enable_if_t<std::is_base_of<xhl::base, Connection>::value, int>>
+			typename = std::enable_if_t<std::is_base_of<xhl::base_connection, Connection>::value, int>>
 	class connection_pool {
 	public:
-		static_assert(std::is_base_of<xhl::base, Connection>::value,
-									"\x1b[031;1m type name `Connection` must be a derived class of `xhl::base-connection`\x1b[0m");
+		static_assert(std::is_base_of<xhl::base_connection, Connection>::value,
+									"\x1b[031;1m type name `Connection` must be a derived class of `xhl::base_connection-connection`\x1b[0m");
 
 		/// 获取连接池对象实例（懒汉式单例模式，在获取实例时才实例化对象）
 		static connection_pool<Connection>* create(xhl::config& _conf) {

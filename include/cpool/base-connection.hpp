@@ -10,12 +10,12 @@
 
 namespace xhl {
 
-	class base {
+	class base_connection {
 	private:
 		clock_t _aliveTime{};
 	public:
 
-		base(xhl::conn_config& conf);
+		base_connection(xhl::conn_config& conf);
 
 		// 刷新连接的起始空闲时刻
 		void refreshAliveTime();

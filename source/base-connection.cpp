@@ -5,15 +5,15 @@
 #include "cpool/base-connection.hpp"
 
 namespace xhl {
-	base::base(conn_config& conf) {
+	base_connection::base_connection(conn_config& conf) {
 		_aliveTime = clock();
 	}
 
-	void base::refreshAliveTime() {
+	void base_connection::refreshAliveTime() {
 		_aliveTime = clock();
 	}
 
-	clock_t base::getAliveTime() const {
+	clock_t base_connection::getAliveTime() const {
 		return clock() - _aliveTime;
 	}
 } // xhl

@@ -14,6 +14,7 @@
 
 #include "cpool/conf/config.hpp"
 #include "base-connection.hpp"
+#include "cpool/conf/pool-config.hpp"
 #include <atomic>
 #include <condition_variable>
 #include <functional>
@@ -24,14 +25,15 @@ namespace xhl {
 			typename = std::enable_if_t<std::is_base_of<xhl::base_connection, Connection>::value, int>>
 	class connection_pool {
 	public:
-		static_assert(std::is_base_of<xhl::base_connection, Connection>::value,
-									"\x1b[031;1m type name `Connection` must be a derived class of `xhl::base_connection-connection`\x1b[0m");
+		static_assert(std::is_base_of_v<xhl::base_connection, Connection>,
+									"\x1b[031;1m type name `Connection` must be a derived class of `xhl::base_connection`\x1b[0m");
 
 		/// 获取连接池对象实例（懒汉式单例模式，在获取实例时才实例化对象）
-		static connection_pool<Connection>* create(xhl::config& _conf) {
+		static connection_pool<Connection>* create(xhl::conn_config& _cf, xhl::pool_config& _pf) {
 			static connection_pool<Connection>* instance;
 			if (instance == nullptr) {
-				instance = new connection_pool<Connection>(std::forward<xhl::config&>(_conf));
+				instance = new connection_pool<Connection>(std::forward<xhl::conn_config&>(_cf),
+																									 std::forward<xhl::pool_config&>(_pf));
 			}
 			return instance;
 		}
@@ -80,10 +82,10 @@ namespace xhl {
 
 	private:
 		/// 单例模式——构造函数私有化
-		connection_pool(xhl::config& _conf) {
+		connection_pool(xhl::conn_config& cf, xhl::pool_config& pf) {
 			/// 初始化kafka参数
-			this->c_config = _conf.cf;
-			this->p_config = _conf.pf;
+			this->c_config = cf;
+			this->p_config = pf;
 			/// 创建初始数量的连接
 			for (int i = 0; i < p_config.init_size; ++i) {
 				_connectionQue.push(new Connection(std::forward<conn_config&>(this->c_config)));

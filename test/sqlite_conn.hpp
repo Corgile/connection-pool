@@ -15,8 +15,6 @@
 namespace xhl {
 	class sqlite_connection : public xhl::base_connection {
 	private:
-		std::string db_path{"./temp.db"};
-		std::string table_name{"test"};
 		sqlite3* db_connection{};
 
 	public:
@@ -54,7 +52,7 @@ namespace xhl {
 
 		// Function to retrieve and display student records
 		void retrieveStudents() {
-			std::string selectSQL = std::string("SELECT * FROM ").append(this->table_name).append(";");
+			std::string selectSQL = std::string("SELECT * FROM ").append(this->c_conf.vtb.table).append(";");
 
 			sqlite3_stmt* stmt = nullptr;
 			int rc = sqlite3_prepare_v2(db_connection, selectSQL.c_str(), -1, &stmt, nullptr);
@@ -68,34 +66,29 @@ namespace xhl {
 				const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
 				int age = sqlite3_column_int(stmt, 2);
 				double grade = sqlite3_column_double(stmt, 3);
-
-				std::cout << "ID: " << id
-									<< ", Name: " << name
-									<< ", Age: " << age
-									<< ", Grade: " << grade << std::endl;
+				std::stringstream ss;
+				ss << "ID=" << id << ", Name=" << name << ", Age=" << age << ", Grade=" << grade;
+				dbg(ss.str());
 			}
 
 			sqlite3_finalize(stmt);
 		}
 
 	public:
-		sqlite_connection(xhl::conn_config& conf) : base_connection(conf) { // NOLINT(*-explicit-constructor)
-			this->db_path = conf.url;
-			this->table_name = conf.tb;
-
-			int rc = sqlite3_open(db_path.c_str(), &db_connection);
+		explicit sqlite_connection(xhl::conn_config& _conf) : base_connection(_conf) {
+			int rc = sqlite3_open(this->c_conf.sink.db_file.c_str(), &db_connection);
 			if (rc != SQLITE_OK) {
 				dbg("无法打开数据库: ", sqlite3_errmsg(db_connection));
 				sqlite3_close(db_connection);
 			}
-			if (not tableExists(this->table_name.c_str())) {
+			if (not tableExists(this->c_conf.vtb.table.c_str())) {
 				createStudentTable();
 			}
 		}
 
 		int insert(student& stu) {
 			std::string insertSQL = std::string("INSERT INTO ")
-					.append(this->table_name)
+					.append(this->c_conf.vtb.table)
 					.append(" (name, age, grade) VALUES (?, ?, ?);");
 
 			sqlite3_stmt* stmt = nullptr;

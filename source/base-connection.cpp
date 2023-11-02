@@ -6,6 +6,7 @@
 
 namespace xhl {
 	base_connection::base_connection(conn_config& conf) {
+		this->c_conf = conf;
 		_aliveTime = clock();
 	}
 
